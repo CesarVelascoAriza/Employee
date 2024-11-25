@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,6 +25,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scotiabank.colpatria.test.dev.data.MockData;
+import com.scotiabank.colpatria.test.dev.entiti.Employee;
+import com.scotiabank.colpatria.test.dev.repository.CityRepository;
+import com.scotiabank.colpatria.test.dev.repository.EmployeeRepository;
 import com.scotiabank.colpatria.test.dev.service.EmployeedService;
 
 
@@ -38,7 +42,6 @@ class EmployeeControllerTest {
     @MockitoBean
     private EmployeedService service;
     
-	
 	@BeforeEach
 	void setUp() {
 		maper = new ObjectMapper();
@@ -107,6 +110,55 @@ class EmployeeControllerTest {
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		.andExpect(jsonPath("$.id").value(1L))
 		;
+		verify(service).findById(anyLong());
+		verify(service).save(any());
 	}
 
+	@Test
+	@DisplayName("test validation fields empty or null")
+	void testValidEmpty()  throws Exception{
+		mvc.perform(		
+				MockMvcRequestBuilders.post("/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(maper.writeValueAsString(new Employee()))
+				)
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.lastName").value("The field lastName must not be null"))
+		.andExpect(jsonPath("$.salary").value("The field salary Invalid amount"))
+		.andExpect(jsonPath("$.state").value("The field state must not be null"))
+		.andExpect(jsonPath("$.dateArrival").value("The field dateArrival must not be null"))
+		.andExpect(jsonPath("$.locationCity").value("The field locationCity must not be null"))
+		;
+		
+	}
+	@Test
+	@DisplayName("test validation hireDate")
+	void testValidHireDate()  throws Exception{
+		mvc.perform(		
+				MockMvcRequestBuilders.post("/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(maper.writeValueAsString(MockData.employeeNum2()))
+				)
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.hireDate").value("The field hireDate date is not valid"))
+		;
+		
+	}
+	@Test
+	@DisplayName("test validation hireDate")
+	void testValidDate()  throws Exception{
+		mvc.perform(		
+				MockMvcRequestBuilders.post("/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(maper.writeValueAsString(MockData.employeeNum3()))
+				)
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.dateBirth").value("The field dateBirth Invalid value"))
+		;
+		
+	}
+	
 }

@@ -1,5 +1,6 @@
 package com.scotiabank.colpatria.test.dev.entiti;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
@@ -10,8 +11,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "states")
-public class State {
+public class State implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

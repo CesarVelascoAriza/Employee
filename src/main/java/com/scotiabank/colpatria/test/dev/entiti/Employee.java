@@ -1,6 +1,10 @@
 package com.scotiabank.colpatria.test.dev.entiti;
 
+import java.io.Serializable;
 import java.util.Date;
+
+import com.scotiabank.colpatria.test.dev.validators.IsValidDateBirth;
+import com.scotiabank.colpatria.test.dev.validators.IsValidHireDate;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,6 +18,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -22,57 +27,58 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "employees")
-public class Employee {
+public class Employee implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotBlank(message = "is required")
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
 	private String firstName;
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
 	private String middleName;
-	@NotBlank(message = "is required")
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
 	private String lastName;
-	@NotNull(message = "not null")
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@NotNull(message = "must not be null")
+	@ManyToOne
 	@JoinColumn(name = "locationCity")
 	private City locationCity;
-	@NotBlank(message = "is required")
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
-	@Pattern(regexp = "^(Calle|Carrera|Diagonal)\\s\\d{2}\\s#\\d{2}-\\d{2}\\s[a-zA-Z\\s]+$",message = "not comply with the format")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
+	//@Pattern(regexp = "^(Calle|Carrera|Diagonal)\\s\\d{3}\\s#\\d{2}-\\d{2}\\s[a-zA-Z\\s]+$",message = "not comply with the format")
 	private String address;
-	@NotNull(message = "not null")
+	@NotNull(message = "must not be null")
+	@IsValidDateBirth()
+	@Temporal(TemporalType.DATE)
 	private Date dateBirth;
-	@NotBlank(message = "is required")
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
-	@Size(min = 10 ,max = 10 ,message = "The number must have 10 numbers")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
+	@Size(min = 10, max = 10 , message = "number is not valid")
 	private String telephone;
-	@NotBlank(message = "is required")
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
 	private String positionTitle;
-	@NotNull(message = "not null")
+	@NotNull(message = "must not be null")
+	@IsValidHireDate(message = "date is not valid")
 	@Temporal(TemporalType.DATE)
 	private Date hireDate;
-	@NotBlank(message = "is required")
-	@NotEmpty(message = "not emty")
-	@NotNull(message = "not null")
-	@Email(message = "is not valid")
+	@NotEmpty(message = "must not be empty")
+	@NotNull(message = "must not be null")
+	@Email(message = "format not valid")
 	private String email;
-	@NotNull(message = "not null") 
+	@Min(value = 1000, message = "Invalid amount")
 	private double salary;
-	@NotNull(message = "not null")
+	@NotNull(message = "must not be null")
 	@Temporal(TemporalType.DATE)
 	private Date dateArrival;
-	@NotNull(message = "not null")
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@NotNull(message = "must not be null")
+	@ManyToOne
 	@JoinColumn(name = "state")
 	private State state;
 

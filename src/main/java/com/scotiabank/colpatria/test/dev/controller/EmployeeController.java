@@ -43,13 +43,13 @@ public class EmployeeController {
 	}
 	@PostMapping
 	public ResponseEntity<?> saveEmployee(@Valid @RequestBody Employee entity,BindingResult result) {
-		if(!result.hasErrors() )
+		if(result.hasErrors() )
 			return this.validar(result);
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(entity));
 	}
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateEmpleoye(@PathVariable Long id, @Valid @RequestBody Employee entity,BindingResult result) {
-		if(!result.hasErrors() )
+		if(result.hasErrors() )
 			return this.validar(result);
 		Optional<Employee> optiona = service.findById(id);
 		if(!optiona.isPresent()) 
@@ -68,7 +68,7 @@ public class EmployeeController {
 	protected ResponseEntity<?> validar(BindingResult result) {
 		Map<String, Object> errores = new HashMap<>();
 		result.getFieldErrors().forEach(err -> {
-			errores.put(err.getField(), "el atributo " + err.getField() + " " + err.getDefaultMessage());
+			errores.put(err.getField(), "The field " + err.getField() + " " + err.getDefaultMessage());
 		});
 		return ResponseEntity.badRequest().body(errores);
 	}

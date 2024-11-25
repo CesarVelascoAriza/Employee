@@ -9,7 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.scotiabank.colpatria.test.dev.controller.ApiExceptionHandler;
 import com.scotiabank.colpatria.test.dev.entiti.Employee;
+import com.scotiabank.colpatria.test.dev.erros.CityInvalidException;
+import com.scotiabank.colpatria.test.dev.repository.CityRepository;
 import com.scotiabank.colpatria.test.dev.repository.EmployeeRepository;
 import com.scotiabank.colpatria.test.dev.service.EmployeedService;
 
@@ -18,6 +21,8 @@ public class EmployeeServiceImpl implements EmployeedService {
 
 	@Autowired
 	private EmployeeRepository repository;
+	@Autowired 
+	private CityRepository cityrepository;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -40,7 +45,11 @@ public class EmployeeServiceImpl implements EmployeedService {
 	@Override
 	@Transactional
 	public Employee save(Employee employee) {
-		return repository.save(employee);
+		
+		if(!cityrepository.existsById(employee.getLocationCity().getId()))
+			throw new CityInvalidException("Invalid City");
+		
+		return repository.save(employee); 
 	}
 
 	@Override
