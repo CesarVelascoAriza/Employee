@@ -26,8 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scotiabank.colpatria.test.dev.data.MockData;
 import com.scotiabank.colpatria.test.dev.entiti.Employee;
-import com.scotiabank.colpatria.test.dev.repository.CityRepository;
-import com.scotiabank.colpatria.test.dev.repository.EmployeeRepository;
+
 import com.scotiabank.colpatria.test.dev.service.EmployeedService;
 
 
@@ -160,5 +159,33 @@ class EmployeeControllerTest {
 		;
 		
 	}
-	
+
+	@Test
+	@DisplayName("test validation address length")
+	void testValidAddressLength()  throws Exception{
+		mvc.perform(		
+				MockMvcRequestBuilders.post("/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(maper.writeValueAsString(MockData.employeeNum5()))
+				)
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.address").value("The field address It must have a length between 6 and a maximum of 100"))
+		;
+		
+	}
+	@Test
+	@DisplayName("test validation address pattern")
+	void testValidAddressPattern()  throws Exception{
+		mvc.perform(		
+				MockMvcRequestBuilders.post("/")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(maper.writeValueAsString(MockData.employeeNum6()))
+				)
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.address").value("The field address not comply with the format"))
+		;
+		
+	}
 }
