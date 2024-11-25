@@ -53,7 +53,7 @@ public class Employee implements Serializable {
 	@NotNull(message = "must not be null")
 	//@Pattern(regexp = "^(Cl|Carrera|Cr|Cll|Transv|Transversal|Diagonal|Diag|Avenida|Av)\\s\\d+[A-Z]?\\s#\\s\\d+-\\d+$",message = "not comply with the format")
 	@Size(min = 6 ,max=100, message = "It must have a length between 6 and a maximum of 100")
-	@Pattern(regexp = "^[a-zA-Z0-9\s#]*$", message = "not comply with the format" )
+	@Pattern(regexp = "^[a-zA-Z0-9\s - #]*$", message = "not comply with the format" )
 	private String address;
 	@NotNull(message = "must not be null")
 	@IsValidDateBirth()
