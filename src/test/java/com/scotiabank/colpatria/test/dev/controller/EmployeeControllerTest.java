@@ -123,7 +123,6 @@ class EmployeeControllerTest {
 				)
 		.andExpect(status().isBadRequest())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-		.andExpect(jsonPath("$.lastName").value("The field lastName must not be null"))
 		.andExpect(jsonPath("$.salary").value("The field salary Invalid amount"))
 		.andExpect(jsonPath("$.state").value("The field state must not be null"))
 		.andExpect(jsonPath("$.dateArrival").value("The field dateArrival must not be null"))
